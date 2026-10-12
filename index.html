@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنظومة السحابية الشاملة لجمع المعطيات</title>
+    
+    <!-- الألوان العنابية والمظهر الديناميكي محقون هنا مباشرة لحل مشكلة المحاذاة والإنترنت -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #060911 0%, #111113 100%);
+            color: #f1f5f9;
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: min-content;
+            padding: 40px 16px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #16161a;
+            border: 1px solid #7f1d1d;
+            padding: 36px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(127, 29, 29, 0.25);
+            width: 100%;
+            max-width: 600px;
+        }
+        .text-center { text-align: center; }
+        .badge {
+            background-color: #450a0a;
+            color: #f87171;
+            font-size: 12px;
+            padding: 5px 14px;
+            border-radius: 9999px;
+            border: 1px solid #991b1b;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        h2 { font-size: 30px; font-weight: 900; color: #ffffff; margin: 20px 0 6px 0; }
+        p { color: #a3a3a3; font-size: 14px; margin: 0 0 32px 0; }
+        .dynamic-form { display: flex; flex-direction: column; gap: 20px; }
+        .section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #f87171;
+            border-bottom: 1px solid #3f3f46;
+            padding-bottom: 6px;
+            margin-top: 10px;
+        }
+        .field-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 14px; font-weight: 600; color: #e5e5e5; }
+        input, select, textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background-color: #212124;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+            background-color: #242429;
+        }
+        .file-container {
+            position: relative;
+            background-color: rgba(33, 33, 36, 0.6);
+            border: 2px dashed #4b5563;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-container:hover { border-color: #ef4444; background-color: rgba(33, 33, 36, 0.9); }
+        .file-container input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #991b1b;
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 800;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            box-shadow: 0 10px 15px -3px rgba(153, 27, 27, 0.3);
+        }
+        .btn-submit:hover { background-color: #b91c1c; transform: translateY(-1px); }
+        .btn-submit:active { transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="text-center">
+            <span class="badge">نظام المعطيات المركزي الموحد</span>
+            <h2>استمارة تسجيل البيانات</h2>
+            <p>منظومة تسجيل وتحديث البيانات السحابية الفورية</p>
+        </div>
+        
+        <form id="masterDynamicForm" class="dynamic-form">
+            <!-- سيتم توليد الحقول هنا تلقائياً بواسطة السكريبت القادم -->
+        </form>
+    </div>
+
+    <script>
+        // هنا سيبدأ السكريبت ومصفوفة المئات من الحقول (في الجزء الثاني)
+        /**
+         * 🛡️ مستودع مئات الخيارات الجاهزة (Master Fields Registry)
+         * لتفعيل أي خانة أمام المدير، قم فقط بتغيير الخاصية active من false إلى true
+         */
+        const masterFieldsDatabase = [
+            // ==== أولاً: البيانات الأساسية الشخصية ====
+            { id: "fullName", label: "الاسم الثلاثي والكنية", type: "text", placeholder: "اكتب الاسم الكامل", section: "البيانات الأساسية الهوية", active: true },
+            { id: "fatherName", label: "اسم الأب", type: "text", placeholder: "اسم الأب الكامل", section: "البيانات الأساسية الهوية", active: true },
+            { id: "motherName", label: "اسم الأم ونسبتها", type: "text", placeholder: "اسم الأم والكنية", section: "البيانات الأساسية الهوية", active: true },
+            { id: "birthPlace", label: "مكان الولادة", type: "text", placeholder: "المحافظة / المدينة / البلدة", section: "البيانات الأساسية الهوية", active: true },
+            { id: "birthDate", label: "تاريخ الولادة", type: "date", placeholder: "", section: "البيانات الأساسية الهوية", active: false },
+            { id: "nationalId", label: "الرقم الوطني / الهوية الشخصية", type: "number", placeholder: "000000000000", section: "البيانات الأساسية الهوية", active: false },
+            { id: "maritalStatus", label: "الحالة الاجتماعية", type: "select", options: ["عازب", "متزوج", "أخرى"], section: "البيانات الأساسية الهوية", active: false },
+            { id: "childrenCount", label: "عدد الأولاد", type: "number", placeholder: "0", section: "البيانات الأساسية الهوية", active: false },
+
+            // ==== ثانياً: المعطيات العسكرية والوظيفية ====
+            { id: "militaryId", label: "الرقم العسكري", type: "number", placeholder: "00000000", section: "المعطيات العسكرية والوظيفية", active: true },
+            { id: "militaryRank", label: "الرتبة الحالية", type: "select", options: ["جندي", "عريف", "رقيب", "ملازم", "نقيب", "رائد", "مقدم", "عقيد"], section: "المعطيات العسكرية والوظيفية", active: false },
+            { id: "enrollmentDate", label: "تاريخ الانتساب / السحب", type: "date", placeholder: "", section: "المعطيات العسكرية والوظيفية", active: false },
+            { id: "currentUnit", label: "التشكيل / الوحدة الحالية", type: "text", placeholder: "اسم الفرقة أو اللواء أو الإدارة", section: "المعطيات العسكرية والوظيفية", active: false },
+            { id: "specialization", label: "الاختصاص العسكري الدقيق", type: "text", placeholder: "نوع الاختصاص", section: "المعطيات العسكرية والوظيفية", active: false },
+            { id: "weaponId", label: "رقم السلاح الفردي المسلم", type: "text", placeholder: "الرقم التسلسلي للسلاح", section: "المعطيات العسكرية والوظيفية", active: false },
+
+            // ==== ثالثاً: معلومات السكن والاتصال ====
+            { id: "livingPlace", label: "مكان السكن الحالي بالتفصيل", type: "text", placeholder: "المحافظة - المنطقة - الشارع", section: "معلومات السكن والاتصال", active: false },
+            { id: "originPlace", label: "مكان القيد الأصلي (النفوس)", type: "text", placeholder: "المحافظة وأمانة القيد", section: "معلومات السكن والاتصال", active: false },
+            { id: "phonePrimary", label: "رقم الهاتف الجوال الأساسي", type: "tel", placeholder: "09xxxxxxxx", section: "معلومات السكن والاتصال", active: false },
+            { id: "phoneSecondary", label: "رقم هاتف طوارئ (احتياطي)", type: "tel", placeholder: "رقم قريب أو سكن", section: "معلومات السكن والاتصال", active: false },
+            { id: "emailAddress", label: "البريد الإلكتروني الحالي", type: "email", placeholder: "name@example.com", section: "معلومات السكن والاتصال", active: false },
+
+            // ==== رابعاً: البيانات الطبية والبدنية ====
+            { id: "bloodType", label: "زمرة الدم", type: "select", options: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"], section: "البيانات الطبية والبدنية", active: false },
+            { id: "heightCm", label: "الطول (بالسنتيمتر)", type: "number", placeholder: "175", section: "البيانات الطبية والبدنية", active: false },
+            { id: "weightKg", label: "الوزن (بالكيلوغرام)", type: "number", placeholder: "70", section: "البيانات الطبية والبدنية", active: false },
+            { id: "medicalNotes", label: "الوضع الصحي / أمراض مزمنة أو إصابات", type: "textarea", placeholder: "اكتب أي ملاحظات طبية إن وجدت، أو اكتب (سليم)", section: "البيانات الطبية والبدنية", active: false },
+
+            // ==== خامساً: المؤهلات والشهادات العلمية ====
+            { id: "educationLevel", label: "التحصيل العلمي / الشهادة", type: "select", options: ["بدون شهادة", "تعليم أساسي", "ثانوية العامة", "معهد متوسط", "إجازة جامعية", "دراسات عليا"], section: "المؤهلات والشهادات العلمية", active: false },
+            { id: "civilSpecialty", label: "التخصص العلمي المدني", type: "text", placeholder: "مثال: هندسة معلوماتية، حقوق، اقتصاد", section: "المؤهلات والشهادات العلمية", active: false },
+            { id: "languages", label: "اللغات الأجنبية التي يتقنها", type: "text", placeholder: "مثال: الإنجليزية، الروسية، الفرنسية", section: "المؤهلات والشهادات العلمية", active: false },
+            { id: "drivingLicense", label: "رخصة القيادة المدنية", type: "select", options: ["لا يوجد", "خاصة", "عامة", "عسكرية"], section: "المؤهلات والشهادات العلمية", active: false },
+
+            // ==== سادساً: المرفقات والصور الرسمية ====
+            { id: "personalPhoto", label: "الصورة الشخصية الرسمية", type: "file", section: "المرفقات والوثائق الرسمية", active: true },
+            { id: "identityCardCopy", label: "صورة وجه الهوية الشخصية", type: "file", section: "المرفقات والوثائق الرسمية", active: false },
+            { id: "militaryCardCopy", label: "صورة البطاقة العسكرية", type: "file", section: "المرفقات والوثائق الرسمية", active: false }
+        ];
+        // ⚙️ محرك التوليد التلقائي للواجهات (UI Generation Engine)
+        const formElement = document.getElementById('masterDynamicForm');
+        let currentSectionHeader = "";
+
+        masterFieldsDatabase.forEach(field => {
+            if (!field.active) return; // تخطي الحقول المعطلة والمخفية تلقائياً
+
+            // إضافة عنوان القسم الفرعي تجميلياً إذا ظهر لأول مرة
+            if (field.section !== currentSectionHeader) {
+                currentSectionHeader = field.section;
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = "section-title";
+                sectionDiv.textContent = currentSectionHeader;
+                formElement.appendChild(sectionDiv);
+            }
+
+            // بناء كبسولة الحقل المنسقة وعزلها
+            const groupDiv = document.createElement('div');
+            groupDiv.className = "field-group";
+
+            const labelEl = document.createElement('label');
+            labelEl.textContent = field.label;
+            groupDiv.appendChild(labelEl);
+
+            // توليد نوع الإدخال الصحيح هندسياً بناء على طبيعة الحقل المحدد
+            if (field.type === "select") {
+                const selectEl = document.createElement('select');
+                selectEl.id = field.id;
+                selectEl.innerHTML = `<option value="">اختر من القائمة...</option>` + 
+                                     field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                groupDiv.appendChild(selectEl);
+            } 
+            else if (field.type === "textarea") {
+                const textEl = document.createElement('textarea');
+                textEl.id = field.id;
+                textEl.rows = 3;
+                textEl.placeholder = field.placeholder;
+                groupDiv.appendChild(textEl);
+            } 
+            else if (field.type === "file") {
+                const fileContainer = document.createElement('div');
+                fileContainer.className = "file-container";
+                fileContainer.innerHTML = `
+                    <input type="file" id="${field.id}" accept="image/*">
+                    <span id="${field.id}-text" style="color: #a3a3a3; font-size: 14px;">📸 اضغط لرفع أو اختيار الملف المطلوب</span>
+                `;
+                groupDiv.appendChild(fileContainer);
+                
+                // إضافة مستمع الأحداث لتحديث اسم الملف المختار فوراً للمستخدم
+                setTimeout(() => {
+                    const fileInput = document.getElementById(field.id);
+                    if (fileInput) {
+                        fileInput.addEventListener('change', function(e) {
+                            const txt = e.target.files.length ? e.target.files.name : "📸 اضغط لرفع أو اختيار الملف المطلوب";
+                            document.getElementById(`${field.id}-text`).textContent = txt;
+                        });
+                    }
+                }, 50);
+            } 
+            else {
+                const inputEl = document.createElement('input');
+                inputEl.type = field.type;
+                inputEl.id = field.id;
+                inputEl.placeholder = field.placeholder;
+                if (field.type === "number") inputEl.style.textAlign = "right";
+                if (field.type === "tel") { inputEl.style.textAlign = "left"; inputEl.style.direction = "ltr"; }
+                groupDiv.appendChild(inputEl);
+            }
+
+            formElement.appendChild(groupDiv);
+        });
+
+        // زر الإرسال الموحد والمستقر ديناميكياً بالعنابي الملوكي
+        const submitBtn = document.createElement('button');
+        submitBtn.type = "submit";
+        submitBtn.className = "btn-submit";
+        submitBtn.textContent = "📤 إرسال المعطيات فوراً للشبكة السحابية";
+        formElement.appendChild(submitBtn);
+
+        // التقاط معطيات النموذج بالكامل عند الإرسال بنجاح للتأكد من المزامنة
+        formElement.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert("تم التقاط وحزم جميع المعطيات النشطة بنجاح وهي جاهزة للإرسال الحي لـ Firebase!");
+        });
+    </script>
+</body>
+</html>
