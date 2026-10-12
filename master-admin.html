@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة استعراض المعطيات المركزية</title>
+    <style>
+        body {
+            background-color: #060911;
+            color: #f1f5f9;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 24px;
+            margin: 0;
+        }
+        .header-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #7f1d1d;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+        h1 { font-size: 26px; font-weight: 900; margin: 0; color: #ffffff; }
+        .btn-print {
+            background-color: #991b1b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-print:hover { background-color: #b91c1c; }
+        .search-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            background-color: #16161a;
+            border: 1px solid #3f3f46;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .search-box:focus { outline: none; border-color: #ef4444; }
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            background-color: #16161a;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 14px; }
+        th { background-color: #450a0a; color: #f87171; padding: 14px; font-weight: bold; border-bottom: 1px solid #7f1d1d; }
+        td { padding: 14px; border-bottom: 1px solid #27272a; color: #e4e4e7; }
+        tr:hover { background-color: rgba(127, 29, 29, 0.1); }
+        .img-placeholder { width: 40px; height: 40px; border-radius: 6px; background-color: #26262b; border: 1px solid #3f3f46; }
+    </style>
+</head>
+<body>
+
+    <div class="header-box">
+        <div>
+            <h1>🛡️ منظومة استعراض التقارير والمعطيات الشاملة</h1>
+        </div>
+        <button class="btn-print" onclick="window.print()">🖨️ طباعة التقرير فوراً</button>
+    </div>
+
+    <!-- حقل تصفية الجدول الفوري -->
+    <input type="text" id="masterSearch" class="search-box" oninput="liveSearch()" placeholder="🔍 ابحث في أي خلية داخل الجدول فورا...">
+
+    <!-- جدول الإكسل الشامل لجميع مئات الاحتمالات القادمة -->
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>الرقم العسكري</th>
+                    <th>الاسم الثلاثي</th>
+                    <th>مكان الولادة</th>
+                    <th>رقم الحساب (IBAN)</th>
+                    <th>مقاس اللباس</th>
+                    <th>مكان السكن</th>
+                    <th>الصورة الشخصية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- عينة مجهزة للنسخ واللصق وعرض النتيجة فورا للمدير -->
+                <tr class="data-row">
+                    <td class="cell-data" style="font-family: monospace; font-weight: bold; color: #f87171;">1029485</td>
+                    <td class="cell-data" style="font-weight: bold; color: white;">جلال محمد أحمد</td>
+                    <td class="cell-data">دمشق</td>
+                    <td class="cell-data">SY00 1234 5678</td>
+                    <td class="cell-data">XL</td>
+                    <td class="cell-data">الميدان - الشارع العام</td>
+                    <td><div class="img-placeholder"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // دالة البحث والفرز الحي الفوري الثابتة هندسياً والمستقلة عن الإنترنت
+        function liveSearch() {
+            const query = document.getElementById('masterSearch').value.toLowerCase().trim();
+            const rows = document.getElementsByClassName('data-row');
+
+            for (let i = 0; i < rows.length; i++) {
+                let match = false;
+                const cells = rows[i].getElementsByClassName('cell-data');
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(query)) {
+                        match = true;
+                        break;
+                    }
+                }
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
